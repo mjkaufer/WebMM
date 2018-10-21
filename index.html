@@ -1,0 +1,26 @@
+<html>
+    <head>
+        <style>
+            body {
+                margin: 0;
+            }
+
+            .instructions {
+                position: absolute;
+                margin: 0.5em 1em;
+            }
+        </style>
+        <script src="two.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/5.2.0/math.min.js"></script>
+    </head>
+    <body>
+        <div class="instructions">
+            <p>The arm follows your mouse position using inverse kinematics!</p>
+            <p>You can toggle following current mouse position vs following the last place you clicked by pressing the toggle button!</p>
+            <button onclick="followMouse=!followMouse;">Click To Toggle Follow Mouse vs Follow Click</button>
+        </div>
+        <div id="two">
+        </div>
+        <script src="script.js"></script>
+    </body>
+</html>
