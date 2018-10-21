@@ -35,15 +35,13 @@ function addGroup() {
     newLink.fill = 'transparent'
     newGroup.add(newLink)
 
-    var axes = makeAxes()
+    var axes = makeJointPoints()
     axes.forEach(function(el) {
       newGroup.add(el)
     })
 
     groups.push({
       group: newGroup,
-      // yAxis: axes[0],
-      // xAxis: axes[1],
       origin: axes[0],
       endPoint: axes[1]
     })
@@ -56,13 +54,6 @@ function addGroup() {
 }
 
 function getGlobalPosition(el) {
-  /*
-    gT0 = groups[0].group._matrix
-    0T1 = groups[1].group._matrix
-    1T2 = groups[2].group._matrix
-
-    groups[x].origin._renderer.elem
-  */
 
   var currentNode = el
   var currentMatrix = new Two.Matrix(...Two.Matrix.Identity)
@@ -82,7 +73,7 @@ function toolDifferenceFromGroupWithRespectToOrigin(groupNum) {
   return [tool.y - origin.y, origin.x - tool.x, 1]
 }
 
-// actually jac transposed
+// actually the transpose of the jacobian
 function makeJacobian() {
   var arr = []
   for (var i = 0; i < groups.length; i++) {
@@ -106,8 +97,6 @@ function calculateGradient(destination, scalar) {
   }
 
   return math.divide(gradients._data, math.norm(gradients) * scalar)
-
-  
 }
 
 function applyGradient(gradient) {
@@ -142,7 +131,7 @@ function goToPoint(e) {
     if (math.distance(toolVec, destination.slice(0, 2)) < tolerance) {
       clearInterval(interval)
     }
-  }, 10)
+  }, 5)
 }
 
 var followMouse = true
@@ -162,20 +151,15 @@ document.body.onmousedown = function(e) {
 const lineSize = 14
 const circleSize = 3
 
-function makeAxes() {
-  // var yAxis = two.makeLine(0, 0, 0, -lineSize)
-  // var xAxis = two.makeLine(0, 0, lineSize, 0)
+function makeJointPoints() {
   var rotationPoint = two.makeCircle(0, 0, circleSize)
   var endPoint = two.makeCircle(0, -linkHeight + linkRadius * 2, circleSize)
-  // yAxis.stroke = 'red'
-  // xAxis.stroke = 'green'
-  // yAxis.linewidth = 2
-  // xAxis.linewidth = 2
+
   rotationPoint.stroke = 'transparent'
   rotationPoint.fill = 'transparent'
   endPoint.stroke = 'transparent'
   endPoint.fill = 'blue'
-  return [/*yAxis, xAxis, */rotationPoint, endPoint]
+  return [rotationPoint, endPoint]
 }
 
 function getTool() {
@@ -188,7 +172,7 @@ var base = new Two.RoundedRectangle(0, 0 - linkHeight / 2 + linkRadius,
                                            linkRadius);
 base.fill = 'transparent'
 
-var axes = makeAxes()
+var axes = makeJointPoints()
 axes.forEach(function(el) {
   baseGroup.add(el)
 })
@@ -196,12 +180,10 @@ axes.forEach(function(el) {
 baseGroup.add(base)
 var groups = [{
   group: baseGroup,
-  // yAxis: axes[0],
-  // xAxis: axes[1],
   origin: axes[0],
   endPoint: axes[1]
 }]
-// baseGroup.add(firstLinkGroup)
+
 two.add(baseGroup)
 
 groups[0].group.rotation = Math.PI / 3
