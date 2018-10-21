@@ -7,15 +7,19 @@ var two = new Two(params).appendTo(elem);
 
 var x = width / 2
 var y = height / 2
-var linkWidth = 20
-var linkHeight = 100
-var linkRadius = linkWidth / 2.0
+const linkWidth = 15
+const linkHeight = 60
+const linkRadius = linkWidth / 2.0
 
 var groups = []
 var rotations = []
 
 const circleRadius = 3
-const numJoints = 6
+const numJoints = 8
+const tolerance = 1
+const speedScalar = 125
+const lineSize = 14
+const circleSize = 3
 
 var baseGroup = new Two.Group()
 baseGroup.translation._x = x
@@ -70,6 +74,8 @@ function getGlobalPosition(el) {
 function toolDifferenceFromGroupWithRespectToOrigin(groupNum) {
   var origin = getGlobalPosition(groups[groupNum].origin)
   var tool = getGlobalPosition(getTool())
+
+  // return perpendicular delta
   return [tool.y - origin.y, origin.x - tool.x, 1]
 }
 
@@ -112,8 +118,6 @@ function moveToPoint(destination, scalar) {
 }
 
 var interval = undefined;
-const tolerance = 1
-const speedScalar = 125
 
 function goToPoint(e) {
   var destination = [e.clientX, e.clientY, 1]
@@ -147,9 +151,6 @@ document.body.onmousedown = function(e) {
     goToPoint(e)
   }
 }
-
-const lineSize = 14
-const circleSize = 3
 
 function makeJointPoints() {
   var rotationPoint = two.makeCircle(0, 0, circleSize)
